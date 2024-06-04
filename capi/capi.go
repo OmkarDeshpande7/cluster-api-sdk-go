@@ -1,7 +1,7 @@
 package capi
 
 import (
-	"sigs.k8s.io/cluster-api/cmd/clusterctl/client"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type CAPICore struct {
