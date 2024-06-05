@@ -7,7 +7,7 @@ import (
 	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
@@ -73,7 +73,7 @@ func (c CreateAWSMachineTemplateInput) GetName() string {
 func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infrastructure.CreateInfraMachineTemplateInput) error {
 	awsInput, ok := input.(CreateAWSMachineTemplateInput)
 	if !ok {
-		return fmt.Errorf("invalid argument to CreateInfraMachineTemplate, input is not type '%s'", TypeCreateAWSClusterInput)
+		return fmt.Errorf("invalid argument to CreateInfraMachineTemplate, input is not type '%s'", TypeCreateAWSMachineTemplateInput)
 	}
 	awsMachineTemplate := awsv2.AWSMachineTemplate{
 		ObjectMeta: metav1.ObjectMeta{
@@ -90,7 +90,7 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 					InstanceType:       awsInput.InstanceType,
 					SSHKeyName:         &awsInput.SSHKey,
 					Subnet: &awsv2.AWSResourceReference{
-						ID: pointer.String(awsInput.Subnet.ID),
+						ID: ptr.To[string](awsInput.Subnet.ID),
 					},
 					RootVolume: &awsv2.Volume{
 						Size: awsInput.RootDisk.Size,

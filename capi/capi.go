@@ -5,5 +5,5 @@ import (
 )
 
 type CAPICore struct {
-	client client.Client
+	Client client.Client
 }

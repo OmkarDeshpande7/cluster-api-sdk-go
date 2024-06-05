@@ -5,7 +5,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 
@@ -34,7 +34,7 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 			Selector: metav1.LabelSelector{
 				MatchLabels: map[string]string{},
 			},
-			Replicas:    pointer.Int32(input.MinMachines),
+			Replicas:    ptr.To[int32](input.MinMachines),
 			ClusterName: input.ClusterName,
 			Template: clusterv1.MachineTemplateSpec{
 				Spec: clusterv1.MachineSpec{
@@ -48,7 +48,7 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 			},
 		},
 	}
-	err := c.client.Create(ctx, &md)
+	err := c.Client.Create(ctx, &md)
 	if err != nil {
 		return err
 	}

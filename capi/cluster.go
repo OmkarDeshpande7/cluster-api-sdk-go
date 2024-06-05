@@ -33,7 +33,7 @@ func (c *CAPICore) CreateCluster(ctx context.Context, input *CreateClusterInput)
 			InfrastructureRef: input.InfrastructureRef,
 		},
 	}
-	err := c.client.Create(ctx, cluster)
+	err := c.Client.Create(ctx, cluster)
 	if err != nil {
 		return err
 	}
