@@ -44,6 +44,9 @@ type CreateAWSClusterInput struct {
 	// +optional
 	// VmNetworkCIDR specifies CIDR for internal VM network
 	VmNetworkCIDR string `json:"vmNetworkCIDR,omitempty"`
+
+	// SSH key to exec into machine
+	SSHKey string `json:"sshKey"`
 }
 
 type RootDiskConfig struct {
@@ -118,7 +121,8 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 				SecurityGroupOverrides:             map[awsv2.SecurityGroupRole]string{},
 				AdditionalControlPlaneIngressRules: []awsv2.IngressRule{},
 			},
-			Region: awsInput.Region,
+			Region:     awsInput.Region,
+			SSHKeyName: &awsInput.SSHKey,
 		},
 	}
 	err := a.Client.Create(ctx, awsCluster)

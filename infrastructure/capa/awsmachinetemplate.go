@@ -2,9 +2,13 @@ package infrastructure
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/utils/pointer"
+	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
 type CreateAWSMachineTemplateInput struct {
@@ -12,7 +16,7 @@ type CreateAWSMachineTemplateInput struct {
 	// AWS EC2 Instance type flavor/type ex: m5zn.metal
 	InstanceType string `json:"instanceType"`
 
-	AMIID string `json:"id"`
+	AMIID *string `json:"id"`
 	// IAM role for instance/machine.
 	IAMInstanceProfile string `json:"iamInstanceProfile"`
 
@@ -23,10 +27,13 @@ type CreateAWSMachineTemplateInput struct {
 	RootDisk RootDiskConfig `json:"rootDisk"`
 
 	// +optional
-	NonRootDisk []RootDiskConfig `json:"nonRootVolumes,omitempty"`
+	NonRootDisk []awsv2.Volume `json:"nonRootVolumes,omitempty"`
 
 	// SSH key to exec into machine
 	SSHKey string `json:"sshKey"`
+
+	// Subnet
+	Subnet awsv2.SubnetSpec `json:"subnet"`
 }
 
 // VolumeType describes the EBS volume type.
@@ -59,10 +66,45 @@ var (
 	)
 )
 
-func (c *CreateAWSMachineTemplateInput) GetName() string {
+func (c CreateAWSMachineTemplateInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input *infrastructure.CreateInfraMachineTemplateInput) error {
+func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infrastructure.CreateInfraMachineTemplateInput) error {
+	awsInput, ok := input.(CreateAWSMachineTemplateInput)
+	if !ok {
+		return fmt.Errorf("invalid argument to CreateInfraMachineTemplate, input is not type '%s'", TypeCreateAWSClusterInput)
+	}
+	awsMachineTemplate := awsv2.AWSMachineTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      awsInput.Name,
+			Namespace: awsInput.Namespace,
+		},
+		Spec: awsv2.AWSMachineTemplateSpec{
+			Template: awsv2.AWSMachineTemplateResource{
+				Spec: awsv2.AWSMachineSpec{
+					AMI: awsv2.AMIReference{
+						ID: awsInput.AMIID,
+					},
+					IAMInstanceProfile: awsInput.IAMInstanceProfile,
+					InstanceType:       awsInput.InstanceType,
+					SSHKeyName:         &awsInput.SSHKey,
+					Subnet: &awsv2.AWSResourceReference{
+						ID: pointer.String(awsInput.Subnet.ID),
+					},
+					RootVolume: &awsv2.Volume{
+						Size: awsInput.RootDisk.Size,
+						Type: awsv2.VolumeType(awsInput.RootDisk.Type),
+						IOPS: awsInput.RootDisk.IOPS,
+					},
+					NonRootVolumes: awsInput.NonRootDisk,
+				},
+			},
+		},
+	}
+	err := a.Client.Create(ctx, &awsMachineTemplate)
+	if err != nil {
+		return err
+	}
 	return nil
 }
