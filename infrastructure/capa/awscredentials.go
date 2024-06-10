@@ -14,6 +14,7 @@ import (
 
 type CreateAWSClusterStaticIdentityInput struct {
 	Name, Namespace, SecretRef, AccessKeyID, SecretAccessKey string
+	MatchLabels                                              []metav1.LabelSelectorRequirement
 }
 
 type DeleteAWSClusterStaticIdentityInput struct {
@@ -39,8 +40,14 @@ func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infra
 			Namespace: awsInput.Namespace,
 		},
 		Spec: awsv2.AWSClusterStaticIdentitySpec{
-			AWSClusterIdentitySpec: awsv2.AWSClusterIdentitySpec{},
-			SecretRef:              awsInput.SecretRef,
+			AWSClusterIdentitySpec: awsv2.AWSClusterIdentitySpec{
+				AllowedNamespaces: &awsv2.AllowedNamespaces{
+					Selector: metav1.LabelSelector{
+						MatchExpressions: awsInput.MatchLabels,
+					},
+				},
+			},
+			SecretRef: awsInput.SecretRef,
 		},
 	}
 

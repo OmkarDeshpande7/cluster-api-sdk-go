@@ -16,7 +16,7 @@ func (c *CreateAWSMachineInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraMachine(ctx context.Context, input *infrastructure.CreateInfraMachineInput) error {
+func (a *AWSProvider) CreateInfraMachine(ctx context.Context, input infrastructure.CreateInfraMachineInput) error {
 	awsMachine := &awsv2.AWSMachine{}
 	err := a.Client.Create(ctx, awsMachine)
 	if err != nil {
