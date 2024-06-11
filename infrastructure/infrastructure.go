@@ -3,6 +3,11 @@ package infrastructure
 import "context"
 
 type InfraProvider interface {
+	GetInfraCluster(ctx context.Context, input GetInfraClusterInput) error
+	GetInfraStaticIdentity(ctx context.Context, input GetInfraClusterStaticIdentityInput) error
+	GetInfraMachine(ctx context.Context, input GetInfraMachineInput) error
+	GetInfraMachineTemplate(ctx context.Context, input GetInfraMachineTemplateInput) error
+
 	CreateInfraCluster(ctx context.Context, input CreateInfraClusterInput) error
 	CreateInfraStaticIdentity(ctx context.Context, input CreateInfraClusterStaticIdentityInput) error
 	CreateInfraMachine(ctx context.Context, input CreateInfraMachineInput) error
@@ -14,6 +19,18 @@ type InfraProvider interface {
 	DeleteInfraMachineTemplate(ctx context.Context, input DeleteInfraMachineTemplateInput) error
 }
 
+type GetInfraClusterInput interface {
+	GetName() string
+}
+type GetInfraClusterStaticIdentityInput interface {
+	GetName() string
+}
+type GetInfraMachineInput interface {
+	GetName() string
+}
+type GetInfraMachineTemplateInput interface {
+	GetName() string
+}
 type CreateInfraClusterInput interface {
 	GetName() string
 }

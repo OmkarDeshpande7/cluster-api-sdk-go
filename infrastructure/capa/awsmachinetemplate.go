@@ -34,6 +34,12 @@ type CreateAWSMachineTemplateInput struct {
 
 	// Subnet
 	Subnet awsv2.SubnetSpec `json:"subnet"`
+
+	// Deploy spot barmetal nodes
+	EnableSpot bool `json:"enableSpot,omitempty"`
+
+	// Bidding price of spot machines
+	SpotBidPrice string `json:"spotBidPrice,omitempty"`
 }
 
 // VolumeType describes the EBS volume type.

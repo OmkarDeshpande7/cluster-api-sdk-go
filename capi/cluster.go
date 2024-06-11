@@ -9,15 +9,16 @@ import (
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 
-type CreateClusterInput struct {
-	Name, Namespace, ControlPlaneFQDN  string
-	ControlPlaneHostPort               int32
-	PodCIDRs, ServiceCIDRs             []string
-	ControlPlaneRef, InfrastructureRef *corev1.ObjectReference
-}
-
 type GetClusterInput struct {
 	Name, Namespace string
+}
+
+type CreateClusterInput struct {
+	Name, Namespace                    string
+	ControlPlaneFQDN                   *string
+	APIServerPort                      *int32
+	PodCIDRs, ServiceCIDRs             []string
+	ControlPlaneRef, InfrastructureRef *corev1.ObjectReference
 }
 
 type DeleteClusterInput struct {
@@ -31,17 +32,29 @@ func (c *CAPICore) CreateCluster(ctx context.Context, input *CreateClusterInput)
 			Namespace: input.Namespace,
 		},
 		Spec: clusterv1.ClusterSpec{
-			ControlPlaneEndpoint: clusterv1.APIEndpoint{
-				Host: input.ControlPlaneFQDN,
-				Port: input.ControlPlaneHostPort,
-			},
+
 			ClusterNetwork: &clusterv1.ClusterNetwork{
-				APIServerPort: &input.ControlPlaneHostPort,
+				APIServerPort: input.APIServerPort,
 			},
 			ControlPlaneRef:   input.ControlPlaneRef,
 			InfrastructureRef: input.InfrastructureRef,
 		},
 	}
+
+	if input.ControlPlaneFQDN != nil {
+		cluster.Spec.ControlPlaneEndpoint.Host = *input.ControlPlaneFQDN
+	}
+	if input.APIServerPort != nil {
+		cluster.Spec.ControlPlaneEndpoint.Port = *input.APIServerPort
+		if cluster.Spec.ClusterNetwork == nil {
+			cluster.Spec.ClusterNetwork = &clusterv1.ClusterNetwork{
+				APIServerPort: input.APIServerPort,
+			}
+		} else {
+			cluster.Spec.ClusterNetwork.APIServerPort = input.APIServerPort
+		}
+	}
+
 	if len(input.PodCIDRs) > 0 {
 		cluster.Spec.ClusterNetwork.Pods = &clusterv1.NetworkRanges{
 			CIDRBlocks: input.PodCIDRs,
