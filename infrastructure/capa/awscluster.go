@@ -6,9 +6,13 @@ import (
 
 	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
+type GetAWSClusterInput struct {
+	Name, Namespace string
+}
 type CreateAWSClusterInput struct {
 	Name, Namespace string
 
@@ -16,7 +20,7 @@ type CreateAWSClusterInput struct {
 	Region string `json:"region"`
 
 	// Available zones to be considered for hosting machines
-	AZs []string `json:"azs"`
+	AZs []string `json:"azs,omitempty"`
 
 	// AWS VPC ID
 	VPCID string `json:"vpcid,omitempty"`
@@ -28,27 +32,18 @@ type CreateAWSClusterInput struct {
 	// List of subnets spec to be consider to host machines.
 	Subnets []awsv2.SubnetSpec `json:"subnets"`
 
-	// Deploy spot barmetal nodes
-	EnableSpot bool `json:"enableSpot,omitempty"`
+	SecurityGroupOverrides map[awsv2.SecurityGroupRole]string
 
-	// Bidding price of spot machines
-	SpotBidPrice string `json:"spotBidPrice,omitempty"`
-
-	// ContainerCIDR configures CIDR for the BareMetal cluster containers
-	ContainerCIDR string `json:"containerCIDR,omitempty"`
-
-	// ServiceCIDR configures CIDR for the BareMetal cluster services
-	ServiceCIDR string `json:"serviceCIDR,omitempty"`
-
-	// +kubebuilder:default:="10.0.2.0/24"
-	// +optional
-	// VmNetworkCIDR specifies CIDR for internal VM network
-	VmNetworkCIDR string `json:"vmNetworkCIDR,omitempty"`
-
+	AdditionalControlPlaneIngressRules []awsv2.IngressRule
 	// SSH key to exec into machine
 	SSHKey string `json:"sshKey"`
+
+	AdditionalLabels map[string]string
 }
 
+type DeleteAWSClusterInput struct {
+	Name, Namespace string
+}
 type RootDiskConfig struct {
 	// Device name
 	// +optional
@@ -99,6 +94,14 @@ func (c CreateAWSClusterInput) GetName() string {
 	return c.Name
 }
 
+func (c GetAWSClusterInput) GetName() string {
+	return c.Name
+}
+
+func (c DeleteAWSClusterInput) GetName() string {
+	return c.Name
+}
+
 func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructure.CreateInfraClusterInput) error {
 	awsInput, ok := input.(CreateAWSClusterInput)
 	if !ok {
@@ -110,22 +113,64 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 			Namespace: awsInput.Namespace,
 		},
 		Spec: awsv2.AWSClusterSpec{
-			NetworkSpec: awsv2.NetworkSpec{
-				VPC: awsv2.VPCSpec{
-					ID: awsInput.VPCID,
-				},
-				Subnets: awsInput.Subnets,
-				CNI: &awsv2.CNISpec{
-					CNIIngressRules: awsv2.CNIIngressRules{},
-				},
-				SecurityGroupOverrides:             map[awsv2.SecurityGroupRole]string{},
-				AdditionalControlPlaneIngressRules: []awsv2.IngressRule{},
-			},
 			Region:     awsInput.Region,
 			SSHKeyName: &awsInput.SSHKey,
 		},
 	}
+
+	if awsInput.VPCID != "" {
+		awsCluster.Spec.NetworkSpec.VPC = awsv2.VPCSpec{
+			ID: awsInput.VPCID,
+		}
+	}
+
+	if len(awsInput.Subnets) > 0 {
+		awsCluster.Spec.NetworkSpec.Subnets = awsInput.Subnets
+	}
+
+	if len(awsInput.SecurityGroupOverrides) > 0 {
+		awsCluster.Spec.NetworkSpec.SecurityGroupOverrides = awsInput.SecurityGroupOverrides
+	}
+
+	if len(awsInput.AdditionalControlPlaneIngressRules) > 0 {
+		awsCluster.Spec.NetworkSpec.AdditionalControlPlaneIngressRules = awsInput.AdditionalControlPlaneIngressRules
+	}
+
+	if len(awsInput.AdditionalLabels) > 0 {
+		awsCluster.ObjectMeta.Labels = make(map[string]string)
+		for key, value := range awsInput.AdditionalLabels {
+			awsCluster.ObjectMeta.Labels[key] = value
+		}
+	}
+
 	err := a.Client.Create(ctx, awsCluster)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *AWSProvider) GetInfraCluster(ctx context.Context, input GetAWSClusterInput) (*awsv2.AWSCluster, error) {
+	awsCluster := &awsv2.AWSCluster{}
+	err := c.Client.Get(ctx, types.NamespacedName{
+		Name:      input.Name,
+		Namespace: input.Namespace,
+	}, awsCluster)
+	if err != nil {
+		return nil, err
+	}
+	return awsCluster, nil
+}
+
+func (c *AWSProvider) DeleteInfraCluster(ctx context.Context, input DeleteAWSClusterInput) error {
+	awsCluster := &awsv2.AWSCluster{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      input.Name,
+			Namespace: input.Namespace,
+		},
+	}
+
+	err := c.Client.Delete(ctx, awsCluster)
 	if err != nil {
 		return err
 	}
