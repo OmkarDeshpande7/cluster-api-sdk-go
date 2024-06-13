@@ -7,7 +7,6 @@ import (
 	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/utils/ptr"
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
@@ -33,13 +32,17 @@ type CreateAWSMachineTemplateInput struct {
 	SSHKey string `json:"sshKey"`
 
 	// Subnet
-	Subnet awsv2.SubnetSpec `json:"subnet"`
+	Subnet *awsv2.AWSResourceReference `json:"subnet"`
 
 	// Deploy spot barmetal nodes
 	EnableSpot bool `json:"enableSpot,omitempty"`
 
 	// Bidding price of spot machines
 	SpotBidPrice string `json:"spotBidPrice,omitempty"`
+
+	ImageLookupBaseOS string
+
+	AdditionalSecurityGroups []awsv2.AWSResourceReference
 }
 
 // VolumeType describes the EBS volume type.
@@ -89,25 +92,34 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 		Spec: awsv2.AWSMachineTemplateSpec{
 			Template: awsv2.AWSMachineTemplateResource{
 				Spec: awsv2.AWSMachineSpec{
-					AMI: awsv2.AMIReference{
-						ID: awsInput.AMIID,
-					},
 					IAMInstanceProfile: awsInput.IAMInstanceProfile,
 					InstanceType:       awsInput.InstanceType,
 					SSHKeyName:         &awsInput.SSHKey,
-					Subnet: &awsv2.AWSResourceReference{
-						ID: ptr.To[string](awsInput.Subnet.ID),
-					},
+
 					RootVolume: &awsv2.Volume{
 						Size: awsInput.RootDisk.Size,
 						Type: awsv2.VolumeType(awsInput.RootDisk.Type),
 						IOPS: awsInput.RootDisk.IOPS,
 					},
-					NonRootVolumes: awsInput.NonRootDisk,
+					NonRootVolumes:    awsInput.NonRootDisk,
+					ImageLookupBaseOS: awsInput.ImageLookupBaseOS,
 				},
 			},
 		},
 	}
+
+	if len(awsInput.AdditionalSecurityGroups) > 0 {
+		awsMachineTemplate.Spec.Template.Spec.AdditionalSecurityGroups = awsInput.AdditionalSecurityGroups
+	}
+
+	awsMachineTemplate.Spec.Template.Spec.Subnet = awsInput.Subnet
+
+	if awsInput.AMIID != nil {
+		awsMachineTemplate.Spec.Template.Spec.AMI = awsv2.AMIReference{
+			ID: awsInput.AMIID,
+		}
+	}
+
 	err := a.Client.Create(ctx, &awsMachineTemplate)
 	if err != nil {
 		return err

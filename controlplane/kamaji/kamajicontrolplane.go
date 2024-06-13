@@ -44,40 +44,6 @@ func (c *KamajiProvider) GetControlPlane(ctx context.Context, input controlplane
 	return nil
 }
 
-/*
-  apiServer:
-    extraArgs:
-      - --cloud-provider=external
-      - --advertise-address=10.96.0.40
-  controllerManager:
-    extraArgs:
-      - --cloud-provider=external
-  dataStoreName: default
-  addons:
-    coreDNS: { }
-    konnectivity:
-      agent:
-        extraArgs:
-          - '--proxy-server-host=konnectivity.__TCP_DNSNAME__'
-          - '--proxy-server-port=443'
-      server:
-        port: 8132
-  kubelet:
-    cgroupfs: systemd
-  network:
-    serviceType: ClusterIP
-    certSANs:
-      - __TCP_DNSNAME__
-      - konnectivity.__TCP_DNSNAME__
-    ingress:
-      className: nginx
-      extraAnnotations:
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-      hostname: __TCP_DNSNAME__
-  replicas: 3
-  version: 1.26.6
-*/
-
 func (c *KamajiProvider) CreateControlPlane(ctx context.Context, input controlplane.CreateControlPlaneInput) error {
 	cpInput, ok := input.(CreateKamajiControlPlaneInput)
 	if !ok {
