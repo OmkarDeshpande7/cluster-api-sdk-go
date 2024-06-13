@@ -108,6 +108,12 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 		},
 	}
 
+	if awsInput.EnableSpot {
+		awsMachineTemplate.Spec.Template.Spec.SpotMarketOptions = &awsv2.SpotMarketOptions{
+			MaxPrice: &awsInput.SpotBidPrice,
+		}
+	}
+
 	if len(awsInput.AdditionalSecurityGroups) > 0 {
 		awsMachineTemplate.Spec.Template.Spec.AdditionalSecurityGroups = awsInput.AdditionalSecurityGroups
 	}
