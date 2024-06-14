@@ -13,8 +13,8 @@ import (
 )
 
 type CreateAWSClusterStaticIdentityInput struct {
-	Name, Namespace, SecretRef, AccessKeyID, SecretAccessKey string
-	MatchLabels                                              map[string]string
+	Name, Namespace, SecretName, AccessKeyID, SecretAccessKey string
+	MatchLabels                                               map[string]string
 }
 
 type DeleteAWSClusterStaticIdentityInput struct {
@@ -47,7 +47,7 @@ func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infra
 					},
 				},
 			},
-			SecretRef: awsInput.SecretRef,
+			SecretRef: awsInput.SecretName,
 		},
 	}
 
@@ -85,7 +85,7 @@ func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastruc
 	}
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      awsInput.SecretRef,
+			Name:      awsInput.SecretName,
 			Namespace: NamespaceCAPASystem,
 		},
 		Data: map[string][]byte{
