@@ -43,6 +43,8 @@ type CreateAWSClusterInput struct {
 	ControlPlaneLoadBalancer *awsv2.AWSLoadBalancerSpec
 
 	IdentityRef *awsv2.AWSIdentityReference
+
+	CNIIngressRules *awsv2.CNIIngressRules
 }
 
 type DeleteAWSClusterInput struct {
@@ -119,6 +121,11 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 		Spec: awsv2.AWSClusterSpec{
 			Region:     awsInput.Region,
 			SSHKeyName: &awsInput.SSHKey,
+			NetworkSpec: awsv2.NetworkSpec{
+				CNI: &awsv2.CNISpec{
+					CNIIngressRules: awsv2.CNIIngressRules{},
+				},
+			},
 		},
 	}
 
@@ -131,6 +138,12 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 	awsCluster.Spec.IdentityRef = awsInput.IdentityRef
 
 	awsCluster.Spec.ControlPlaneLoadBalancer = awsInput.ControlPlaneLoadBalancer
+
+	if awsInput.CNIIngressRules != nil {
+		awsCluster.Spec.NetworkSpec.CNI = &awsv2.CNISpec{
+			CNIIngressRules: *awsInput.CNIIngressRules,
+		}
+	}
 
 	if len(awsInput.Subnets) > 0 {
 		awsCluster.Spec.NetworkSpec.Subnets = awsInput.Subnets
