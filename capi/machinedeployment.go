@@ -22,6 +22,12 @@ type CreateMachineDeploymentInput struct {
 	InfrastructureRef *corev1.ObjectReference `json:"infrastructureRef"`
 
 	NodeVersion *string `json:"nodeVersion"`
+
+	MatchLabels map[string]string
+}
+
+type ListMachineDeploymentInput struct {
+	Namespace string
 }
 
 func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMachineDeploymentInput) error {
@@ -32,7 +38,7 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 		},
 		Spec: clusterv1.MachineDeploymentSpec{
 			Selector: metav1.LabelSelector{
-				MatchLabels: map[string]string{},
+				MatchLabels: input.MatchLabels,
 			},
 			Replicas:    ptr.To[int32](input.MinMachines),
 			ClusterName: input.ClusterName,
@@ -53,4 +59,13 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 		return err
 	}
 	return nil
+}
+
+func (c *CAPICore) ListMachineDeployment(ctx context.Context, input *ListMachineDeploymentInput) (*clusterv1.MachineDeploymentList, error) {
+	mdList := &clusterv1.MachineDeploymentList{}
+	err := c.Client.List(ctx, mdList)
+	if err != nil {
+		return nil, err
+	}
+	return mdList, nil
 }

@@ -39,6 +39,10 @@ type CreateAWSClusterInput struct {
 	SSHKey string `json:"sshKey"`
 
 	AdditionalLabels map[string]string
+
+	ControlPlaneLoadBalancer *awsv2.AWSLoadBalancerSpec
+
+	IdentityRef *awsv2.AWSIdentityReference
 }
 
 type DeleteAWSClusterInput struct {
@@ -123,6 +127,10 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 			ID: awsInput.VPCID,
 		}
 	}
+
+	awsCluster.Spec.IdentityRef = awsInput.IdentityRef
+
+	awsCluster.Spec.ControlPlaneLoadBalancer = awsInput.ControlPlaneLoadBalancer
 
 	if len(awsInput.Subnets) > 0 {
 		awsCluster.Spec.NetworkSpec.Subnets = awsInput.Subnets
