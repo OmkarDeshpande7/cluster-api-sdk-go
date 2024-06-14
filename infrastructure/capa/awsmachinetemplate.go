@@ -92,9 +92,8 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 		Spec: awsv2.AWSMachineTemplateSpec{
 			Template: awsv2.AWSMachineTemplateResource{
 				Spec: awsv2.AWSMachineSpec{
-					IAMInstanceProfile: awsInput.IAMInstanceProfile,
-					InstanceType:       awsInput.InstanceType,
-					SSHKeyName:         &awsInput.SSHKey,
+					InstanceType: awsInput.InstanceType,
+					SSHKeyName:   &awsInput.SSHKey,
 
 					RootVolume: &awsv2.Volume{
 						Size: awsInput.RootDisk.Size,
@@ -106,6 +105,9 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 				},
 			},
 		},
+	}
+	if awsInput.IAMInstanceProfile != "" {
+		awsMachineTemplate.Spec.Template.Spec.IAMInstanceProfile = awsInput.IAMInstanceProfile
 	}
 
 	if awsInput.EnableSpot {
