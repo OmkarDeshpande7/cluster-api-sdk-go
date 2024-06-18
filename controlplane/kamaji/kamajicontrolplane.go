@@ -7,6 +7,7 @@ import (
 	"github.com/OmkarDeshpande7/cluster-api-sdk-go/controlplane"
 	kamajiv1alpha1 "github.com/clastix/kamaji/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/pointer"
 
 	kcpv1alpha1 "github.com/clastix/cluster-api-control-plane-provider-kamaji/api/v1alpha1"
@@ -40,8 +41,20 @@ func (c DeleteKamajiControlPlaneInput) GetName() string {
 	return c.Name
 }
 
-func (c *KamajiProvider) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) error {
-	return nil
+func (c *KamajiProvider) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) (*kcpv1alpha1.KamajiControlPlane, error) {
+	cpInput, ok := input.(GetKamajiControlPlaneInput)
+	if !ok {
+		return nil, fmt.Errorf("invalid argument to GetControlPlane, input is not type '%s'", TypeGetKamajiControlPlaneInput)
+	}
+	controlPlane := &kcpv1alpha1.KamajiControlPlane{}
+	err := c.Client.Get(ctx, types.NamespacedName{
+		Name:      cpInput.Name,
+		Namespace: cpInput.Namespace,
+	}, controlPlane)
+	if err != nil {
+		return nil, err
+	}
+	return controlPlane, nil
 }
 
 func (c *KamajiProvider) CreateControlPlane(ctx context.Context, input controlplane.CreateControlPlaneInput) error {

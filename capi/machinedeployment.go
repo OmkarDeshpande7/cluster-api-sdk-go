@@ -5,8 +5,10 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/utils/ptr"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type CreateMachineDeploymentInput struct {
@@ -27,7 +29,8 @@ type CreateMachineDeploymentInput struct {
 }
 
 type ListMachineDeploymentInput struct {
-	Namespace string
+	Namespace     string
+	LabelSelector labels.Selector
 }
 
 func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMachineDeploymentInput) error {
@@ -63,7 +66,10 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 
 func (c *CAPICore) ListMachineDeployment(ctx context.Context, input *ListMachineDeploymentInput) (*clusterv1.MachineDeploymentList, error) {
 	mdList := &clusterv1.MachineDeploymentList{}
-	err := c.Client.List(ctx, mdList)
+	err := c.Client.List(ctx, mdList, &client.ListOptions{
+		Namespace:     input.Namespace,
+		LabelSelector: input.LabelSelector,
+	})
 	if err != nil {
 		return nil, err
 	}
