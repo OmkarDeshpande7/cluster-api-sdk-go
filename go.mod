@@ -1,4 +1,4 @@
-module github.com/OmkarDeshpande7/cluster-api-sdk-go
+module github.com/platform9/cluster-api-sdk-go
 
 go 1.22.0
 
