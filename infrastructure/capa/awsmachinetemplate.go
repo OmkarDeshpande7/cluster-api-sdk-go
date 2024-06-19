@@ -43,6 +43,8 @@ type CreateAWSMachineTemplateInput struct {
 	ImageLookupBaseOS string
 
 	AdditionalSecurityGroups []awsv2.AWSResourceReference
+
+	AdditionalTags awsv2.Tags
 }
 
 // VolumeType describes the EBS volume type.
@@ -115,6 +117,8 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 			MaxPrice: &awsInput.SpotBidPrice,
 		}
 	}
+
+	awsMachineTemplate.Spec.Template.Spec.AdditionalTags = awsInput.AdditionalTags
 
 	if len(awsInput.AdditionalSecurityGroups) > 0 {
 		awsMachineTemplate.Spec.Template.Spec.AdditionalSecurityGroups = awsInput.AdditionalSecurityGroups
