@@ -26,6 +26,8 @@ type CreateMachineDeploymentInput struct {
 	NodeVersion *string `json:"nodeVersion"`
 
 	MatchLabels map[string]string
+
+	AdditionalLabels map[string]string
 }
 
 type ListMachineDeploymentInput struct {
@@ -57,6 +59,14 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 			},
 		},
 	}
+
+	if len(input.AdditionalLabels) > 0 {
+		md.ObjectMeta.Labels = make(map[string]string)
+		for key, value := range input.AdditionalLabels {
+			md.ObjectMeta.Labels[key] = value
+		}
+	}
+
 	err := c.Client.Create(ctx, &md)
 	if err != nil {
 		return err
