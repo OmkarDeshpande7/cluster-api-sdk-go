@@ -21,6 +21,7 @@ type CreateKamajiControlPlaneInput struct {
 	Name, Namespace, Datastore, CGroupDriver, K8sVersion, IngressHostname string
 	APIServerExtraArgs, ControllerManagerExtraArgs, CertSANs              []string
 	AddonsSpec                                                            *kamajiv1alpha1.AddonsSpec
+	CoreDNSAddonSpec                                                      *kcpv1alpha1.CoreDNSAddonSpec
 	Replicas                                                              int32
 	ExtraAnnotations                                                      map[string]string
 }
@@ -69,12 +70,16 @@ func (c *KamajiProvider) CreateControlPlane(ctx context.Context, input controlpl
 			Namespace: cpInput.Namespace,
 		},
 		Spec: kcpv1alpha1.KamajiControlPlaneSpec{
-			ApiServer:         kcpv1alpha1.ControlPlaneComponent{},
-			ControllerManager: kcpv1alpha1.ControlPlaneComponent{},
-			DataStoreName:     cpInput.Datastore,
+			ApiServer: kcpv1alpha1.ControlPlaneComponent{
+				ExtraArgs: cpInput.APIServerExtraArgs,
+			},
+			ControllerManager: kcpv1alpha1.ControlPlaneComponent{
+				ExtraArgs: cpInput.ControllerManagerExtraArgs,
+			},
+			DataStoreName: cpInput.Datastore,
 			Addons: kcpv1alpha1.AddonsSpec{
 				AddonsSpec: *cpInput.AddonsSpec,
-				CoreDNS:    &kcpv1alpha1.CoreDNSAddonSpec{},
+				CoreDNS:    cpInput.CoreDNSAddonSpec,
 			},
 			Kubelet: kamajiv1alpha1.KubeletSpec{
 				CGroupFS: kamajiv1alpha1.CGroupDriver(cpInput.CGroupDriver),
