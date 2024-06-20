@@ -30,9 +30,11 @@ func (c *CAPICore) CreateCluster(ctx context.Context, input *CreateClusterInput)
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      input.Name,
 			Namespace: input.Namespace,
+			Labels: map[string]string{
+				"core-addons": "enabled",
+			},
 		},
 		Spec: clusterv1.ClusterSpec{
-
 			ClusterNetwork: &clusterv1.ClusterNetwork{
 				APIServerPort: input.APIServerPort,
 			},
