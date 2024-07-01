@@ -6,6 +6,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -25,6 +26,20 @@ type CreateMachineDeploymentInput struct {
 	NodeVersion *string `json:"nodeVersion"`
 
 	MatchLabels map[string]string
+
+	AdditionalLabels map[string]string
+
+	Replicas *int32
+}
+
+type GetMachineDeploymentInput struct {
+	Name, Namespace string
+}
+
+type UpdateMachineDeploymentInput struct {
+	Name, Namespace string
+
+	NodeVersion *string `json:"nodeVersion"`
 
 	AdditionalLabels map[string]string
 
@@ -69,6 +84,52 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 	}
 
 	err := c.Client.Create(ctx, &md)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *CAPICore) GetMachineDeployment(ctx context.Context, input *GetMachineDeploymentInput) (*clusterv1.MachineDeployment, error) {
+	md := &clusterv1.MachineDeployment{}
+	err := c.Client.Get(ctx, types.NamespacedName{
+		Name:      input.Name,
+		Namespace: input.Namespace,
+	}, md)
+	if err != nil {
+		return nil, err
+	}
+	return md, nil
+}
+
+func (c *CAPICore) UpdateMachineDeployment(ctx context.Context, input *UpdateMachineDeploymentInput) error {
+
+	md, err := c.GetMachineDeployment(ctx, &GetMachineDeploymentInput{
+		Name:      input.Name,
+		Namespace: input.Namespace,
+	})
+	if err != nil {
+		return err
+	}
+
+	if input.NodeVersion != nil {
+		md.Spec.Template.Spec.Version = input.NodeVersion
+	}
+
+	if input.Replicas != nil {
+		md.Spec.Replicas = input.Replicas
+	}
+
+	if len(input.AdditionalLabels) > 0 {
+		if len(md.Labels) == 0 {
+			md.Labels = make(map[string]string, 0)
+		}
+		for key, value := range input.AdditionalLabels {
+			md.Labels[key] = value
+		}
+	}
+
+	err = c.Client.Update(ctx, md)
 	if err != nil {
 		return err
 	}
