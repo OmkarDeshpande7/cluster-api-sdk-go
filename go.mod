@@ -7,6 +7,7 @@ toolchain go1.22.4
 require (
 	github.com/clastix/cluster-api-control-plane-provider-kamaji v0.9.0
 	github.com/clastix/kamaji v0.6.0
+	go.uber.org/mock v0.4.0
 	k8s.io/api v0.30.1
 	k8s.io/apimachinery v0.30.1
 	k8s.io/client-go v0.30.1
