@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	controlplane "github.com/OmkarDeshpande7/cluster-api-sdk-go/controlplane"
+	controlplane "github.com/platform9/cluster-api-sdk-go/controlplane"
 	gomock "go.uber.org/mock/gomock"
 )
 

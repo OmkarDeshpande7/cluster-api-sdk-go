@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	infrastructure "github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
+	infrastructure "github.com/platform9/cluster-api-sdk-go/infrastructure"
 	gomock "go.uber.org/mock/gomock"
 )
 

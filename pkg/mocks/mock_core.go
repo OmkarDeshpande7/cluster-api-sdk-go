@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	capi "github.com/OmkarDeshpande7/cluster-api-sdk-go/capi"
+	capi "github.com/platform9/cluster-api-sdk-go/capi"
 	gomock "go.uber.org/mock/gomock"
 	v1beta1 "sigs.k8s.io/cluster-api/api/v1beta1"
 )
