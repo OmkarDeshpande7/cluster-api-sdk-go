@@ -203,7 +203,7 @@ func (a *AWSProvider) DeleteClusterRoleIdentity(ctx context.Context, input infra
 	})
 }
 
-func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetClusterInfraIdentityInput) error {
+func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) error {
 	getRoleInput, ok := input.(GetAWSClusterRoleIdentityInput)
 	if !ok {
 		return fmt.Errorf("cannot convert to GetAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
