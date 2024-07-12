@@ -22,7 +22,7 @@ type InfraProvider interface {
 	DeleteInfraMachineTemplate(ctx context.Context, input DeleteInfraMachineTemplateInput) error
 
 	CreateClusterRoleIdentity(ctx context.Context, input CreateInfraClusterIdentityInput) error
-	GetClusterRoleIdentity(ctx context.Context, input GetClusterInfraIdentityInput) error
+	GetClusterRoleIdentity(ctx context.Context, input GetInfraClusterIdentityInput) error
 	DeleteClusterRoleIdentity(ctx context.Context, input DeleteInfraClusterIdentityInput) error
 }
 
@@ -70,6 +70,6 @@ type DeleteInfraClusterIdentityInput interface {
 	GetName() string
 }
 
-type GetClusterInfraIdentityInput interface {
+type GetInfraClusterIdentityInput interface {
 	GetName() string
 }
