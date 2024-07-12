@@ -5,7 +5,7 @@ import (
 )
 
 type ControlPlaneProvider interface {
-	GetControlPlane(ctx context.Context, input GetControlPlaneInput) error
+	GetControlPlane(ctx context.Context, input GetControlPlaneInput) (any, error)
 
 	CreateControlPlane(ctx context.Context, input CreateControlPlaneInput) error
 

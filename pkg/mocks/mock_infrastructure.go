@@ -40,6 +40,20 @@ func (m *MockInfraProvider) EXPECT() *MockInfraProviderMockRecorder {
 	return m.recorder
 }
 
+// CreateClusterRoleIdentity mocks base method.
+func (m *MockInfraProvider) CreateClusterRoleIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateClusterRoleIdentity", ctx, input)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateClusterRoleIdentity indicates an expected call of CreateClusterRoleIdentity.
+func (mr *MockInfraProviderMockRecorder) CreateClusterRoleIdentity(ctx, input any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateClusterRoleIdentity", reflect.TypeOf((*MockInfraProvider)(nil).CreateClusterRoleIdentity), ctx, input)
+}
+
 // CreateInfraCluster mocks base method.
 func (m *MockInfraProvider) CreateInfraCluster(ctx context.Context, input infrastructure.CreateInfraClusterInput) error {
 	m.ctrl.T.Helper()
@@ -83,7 +97,7 @@ func (mr *MockInfraProviderMockRecorder) CreateInfraMachineTemplate(ctx, input a
 }
 
 // CreateInfraStaticIdentity mocks base method.
-func (m *MockInfraProvider) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterStaticIdentityInput) error {
+func (m *MockInfraProvider) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInfraStaticIdentity", ctx, input)
 	ret0, _ := ret[0].(error)
@@ -94,6 +108,20 @@ func (m *MockInfraProvider) CreateInfraStaticIdentity(ctx context.Context, input
 func (mr *MockInfraProviderMockRecorder) CreateInfraStaticIdentity(ctx, input any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInfraStaticIdentity", reflect.TypeOf((*MockInfraProvider)(nil).CreateInfraStaticIdentity), ctx, input)
+}
+
+// DeleteClusterRoleIdentity mocks base method.
+func (m *MockInfraProvider) DeleteClusterRoleIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteClusterRoleIdentity", ctx, input)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteClusterRoleIdentity indicates an expected call of DeleteClusterRoleIdentity.
+func (mr *MockInfraProviderMockRecorder) DeleteClusterRoleIdentity(ctx, input any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteClusterRoleIdentity", reflect.TypeOf((*MockInfraProvider)(nil).DeleteClusterRoleIdentity), ctx, input)
 }
 
 // DeleteInfraCluster mocks base method.
@@ -139,7 +167,7 @@ func (mr *MockInfraProviderMockRecorder) DeleteInfraMachineTemplate(ctx, input a
 }
 
 // DeleteInfraStaticIdentity mocks base method.
-func (m *MockInfraProvider) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterStaticIdentityInput) error {
+func (m *MockInfraProvider) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteInfraStaticIdentity", ctx, input)
 	ret0, _ := ret[0].(error)
@@ -152,12 +180,27 @@ func (mr *MockInfraProviderMockRecorder) DeleteInfraStaticIdentity(ctx, input an
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInfraStaticIdentity", reflect.TypeOf((*MockInfraProvider)(nil).DeleteInfraStaticIdentity), ctx, input)
 }
 
-// GetInfraCluster mocks base method.
-func (m *MockInfraProvider) GetInfraCluster(ctx context.Context, input infrastructure.GetInfraClusterInput) error {
+// GetClusterRoleIdentity mocks base method.
+func (m *MockInfraProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInfraCluster", ctx, input)
+	ret := m.ctrl.Call(m, "GetClusterRoleIdentity", ctx, input)
 	ret0, _ := ret[0].(error)
 	return ret0
+}
+
+// GetClusterRoleIdentity indicates an expected call of GetClusterRoleIdentity.
+func (mr *MockInfraProviderMockRecorder) GetClusterRoleIdentity(ctx, input any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterRoleIdentity", reflect.TypeOf((*MockInfraProvider)(nil).GetClusterRoleIdentity), ctx, input)
+}
+
+// GetInfraCluster mocks base method.
+func (m *MockInfraProvider) GetInfraCluster(ctx context.Context, input infrastructure.GetInfraClusterInput) (any, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInfraCluster", ctx, input)
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetInfraCluster indicates an expected call of GetInfraCluster.
@@ -192,20 +235,6 @@ func (m *MockInfraProvider) GetInfraMachineTemplate(ctx context.Context, input i
 func (mr *MockInfraProviderMockRecorder) GetInfraMachineTemplate(ctx, input any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfraMachineTemplate", reflect.TypeOf((*MockInfraProvider)(nil).GetInfraMachineTemplate), ctx, input)
-}
-
-// GetInfraStaticIdentity mocks base method.
-func (m *MockInfraProvider) GetInfraStaticIdentity(ctx context.Context, input infrastructure.GetInfraClusterStaticIdentityInput) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInfraStaticIdentity", ctx, input)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetInfraStaticIdentity indicates an expected call of GetInfraStaticIdentity.
-func (mr *MockInfraProviderMockRecorder) GetInfraStaticIdentity(ctx, input any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfraStaticIdentity", reflect.TypeOf((*MockInfraProvider)(nil).GetInfraStaticIdentity), ctx, input)
 }
 
 // MockGetInfraClusterInput is a mock of GetInfraClusterInput interface.
@@ -393,31 +422,31 @@ func (mr *MockCreateInfraClusterInputMockRecorder) GetName() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockCreateInfraClusterInput)(nil).GetName))
 }
 
-// MockCreateInfraClusterStaticIdentityInput is a mock of CreateInfraClusterStaticIdentityInput interface.
-type MockCreateInfraClusterStaticIdentityInput struct {
+// MockCreateInfraClusterIdentityInput is a mock of CreateInfraClusterIdentityInput interface.
+type MockCreateInfraClusterIdentityInput struct {
 	ctrl     *gomock.Controller
-	recorder *MockCreateInfraClusterStaticIdentityInputMockRecorder
+	recorder *MockCreateInfraClusterIdentityInputMockRecorder
 }
 
-// MockCreateInfraClusterStaticIdentityInputMockRecorder is the mock recorder for MockCreateInfraClusterStaticIdentityInput.
-type MockCreateInfraClusterStaticIdentityInputMockRecorder struct {
-	mock *MockCreateInfraClusterStaticIdentityInput
+// MockCreateInfraClusterIdentityInputMockRecorder is the mock recorder for MockCreateInfraClusterIdentityInput.
+type MockCreateInfraClusterIdentityInputMockRecorder struct {
+	mock *MockCreateInfraClusterIdentityInput
 }
 
-// NewMockCreateInfraClusterStaticIdentityInput creates a new mock instance.
-func NewMockCreateInfraClusterStaticIdentityInput(ctrl *gomock.Controller) *MockCreateInfraClusterStaticIdentityInput {
-	mock := &MockCreateInfraClusterStaticIdentityInput{ctrl: ctrl}
-	mock.recorder = &MockCreateInfraClusterStaticIdentityInputMockRecorder{mock}
+// NewMockCreateInfraClusterIdentityInput creates a new mock instance.
+func NewMockCreateInfraClusterIdentityInput(ctrl *gomock.Controller) *MockCreateInfraClusterIdentityInput {
+	mock := &MockCreateInfraClusterIdentityInput{ctrl: ctrl}
+	mock.recorder = &MockCreateInfraClusterIdentityInputMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCreateInfraClusterStaticIdentityInput) EXPECT() *MockCreateInfraClusterStaticIdentityInputMockRecorder {
+func (m *MockCreateInfraClusterIdentityInput) EXPECT() *MockCreateInfraClusterIdentityInputMockRecorder {
 	return m.recorder
 }
 
 // GetName mocks base method.
-func (m *MockCreateInfraClusterStaticIdentityInput) GetName() string {
+func (m *MockCreateInfraClusterIdentityInput) GetName() string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetName")
 	ret0, _ := ret[0].(string)
@@ -425,9 +454,9 @@ func (m *MockCreateInfraClusterStaticIdentityInput) GetName() string {
 }
 
 // GetName indicates an expected call of GetName.
-func (mr *MockCreateInfraClusterStaticIdentityInputMockRecorder) GetName() *gomock.Call {
+func (mr *MockCreateInfraClusterIdentityInputMockRecorder) GetName() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockCreateInfraClusterStaticIdentityInput)(nil).GetName))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockCreateInfraClusterIdentityInput)(nil).GetName))
 }
 
 // MockCreateInfraMachineInput is a mock of CreateInfraMachineInput interface.
@@ -541,43 +570,6 @@ func (mr *MockDeleteInfraClusterInputMockRecorder) GetName() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockDeleteInfraClusterInput)(nil).GetName))
 }
 
-// MockDeleteInfraClusterStaticIdentityInput is a mock of DeleteInfraClusterStaticIdentityInput interface.
-type MockDeleteInfraClusterStaticIdentityInput struct {
-	ctrl     *gomock.Controller
-	recorder *MockDeleteInfraClusterStaticIdentityInputMockRecorder
-}
-
-// MockDeleteInfraClusterStaticIdentityInputMockRecorder is the mock recorder for MockDeleteInfraClusterStaticIdentityInput.
-type MockDeleteInfraClusterStaticIdentityInputMockRecorder struct {
-	mock *MockDeleteInfraClusterStaticIdentityInput
-}
-
-// NewMockDeleteInfraClusterStaticIdentityInput creates a new mock instance.
-func NewMockDeleteInfraClusterStaticIdentityInput(ctrl *gomock.Controller) *MockDeleteInfraClusterStaticIdentityInput {
-	mock := &MockDeleteInfraClusterStaticIdentityInput{ctrl: ctrl}
-	mock.recorder = &MockDeleteInfraClusterStaticIdentityInputMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDeleteInfraClusterStaticIdentityInput) EXPECT() *MockDeleteInfraClusterStaticIdentityInputMockRecorder {
-	return m.recorder
-}
-
-// GetName mocks base method.
-func (m *MockDeleteInfraClusterStaticIdentityInput) GetName() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetName")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// GetName indicates an expected call of GetName.
-func (mr *MockDeleteInfraClusterStaticIdentityInputMockRecorder) GetName() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockDeleteInfraClusterStaticIdentityInput)(nil).GetName))
-}
-
 // MockDeleteInfraMachineInput is a mock of DeleteInfraMachineInput interface.
 type MockDeleteInfraMachineInput struct {
 	ctrl     *gomock.Controller
@@ -650,4 +642,78 @@ func (m *MockDeleteInfraMachineTemplateInput) GetName() string {
 func (mr *MockDeleteInfraMachineTemplateInputMockRecorder) GetName() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockDeleteInfraMachineTemplateInput)(nil).GetName))
+}
+
+// MockDeleteInfraClusterIdentityInput is a mock of DeleteInfraClusterIdentityInput interface.
+type MockDeleteInfraClusterIdentityInput struct {
+	ctrl     *gomock.Controller
+	recorder *MockDeleteInfraClusterIdentityInputMockRecorder
+}
+
+// MockDeleteInfraClusterIdentityInputMockRecorder is the mock recorder for MockDeleteInfraClusterIdentityInput.
+type MockDeleteInfraClusterIdentityInputMockRecorder struct {
+	mock *MockDeleteInfraClusterIdentityInput
+}
+
+// NewMockDeleteInfraClusterIdentityInput creates a new mock instance.
+func NewMockDeleteInfraClusterIdentityInput(ctrl *gomock.Controller) *MockDeleteInfraClusterIdentityInput {
+	mock := &MockDeleteInfraClusterIdentityInput{ctrl: ctrl}
+	mock.recorder = &MockDeleteInfraClusterIdentityInputMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDeleteInfraClusterIdentityInput) EXPECT() *MockDeleteInfraClusterIdentityInputMockRecorder {
+	return m.recorder
+}
+
+// GetName mocks base method.
+func (m *MockDeleteInfraClusterIdentityInput) GetName() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetName")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetName indicates an expected call of GetName.
+func (mr *MockDeleteInfraClusterIdentityInputMockRecorder) GetName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockDeleteInfraClusterIdentityInput)(nil).GetName))
+}
+
+// MockGetInfraClusterIdentityInput is a mock of GetInfraClusterIdentityInput interface.
+type MockGetInfraClusterIdentityInput struct {
+	ctrl     *gomock.Controller
+	recorder *MockGetInfraClusterIdentityInputMockRecorder
+}
+
+// MockGetInfraClusterIdentityInputMockRecorder is the mock recorder for MockGetInfraClusterIdentityInput.
+type MockGetInfraClusterIdentityInputMockRecorder struct {
+	mock *MockGetInfraClusterIdentityInput
+}
+
+// NewMockGetInfraClusterIdentityInput creates a new mock instance.
+func NewMockGetInfraClusterIdentityInput(ctrl *gomock.Controller) *MockGetInfraClusterIdentityInput {
+	mock := &MockGetInfraClusterIdentityInput{ctrl: ctrl}
+	mock.recorder = &MockGetInfraClusterIdentityInputMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockGetInfraClusterIdentityInput) EXPECT() *MockGetInfraClusterIdentityInputMockRecorder {
+	return m.recorder
+}
+
+// GetName mocks base method.
+func (m *MockGetInfraClusterIdentityInput) GetName() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetName")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetName indicates an expected call of GetName.
+func (mr *MockGetInfraClusterIdentityInputMockRecorder) GetName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockGetInfraClusterIdentityInput)(nil).GetName))
 }

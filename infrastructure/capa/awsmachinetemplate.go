@@ -138,3 +138,11 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 	}
 	return nil
 }
+
+func (a *AWSProvider) DeleteInfraMachineTemplate(ctx context.Context, input infrastructure.DeleteInfraMachineTemplateInput) error {
+	return nil
+}
+
+func (a *AWSProvider) GetInfraMachineTemplate(ctx context.Context, input infrastructure.GetInfraMachineTemplateInput) error {
+	return nil
+}
