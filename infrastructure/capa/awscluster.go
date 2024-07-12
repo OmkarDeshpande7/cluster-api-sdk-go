@@ -171,11 +171,15 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 	return nil
 }
 
-func (c *AWSProvider) GetInfraCluster(ctx context.Context, input GetAWSClusterInput) (*awsv2.AWSCluster, error) {
+func (c *AWSProvider) GetInfraCluster(ctx context.Context, input infrastructure.GetInfraClusterInput) (any, error) {
+	awsInput, ok := input.(GetAWSClusterInput)
+	if !ok {
+		return nil, fmt.Errorf("invalid argument to GetAWSClusterInput, input is not type '%s'", TypeCreateAWSClusterInput)
+	}
 	awsCluster := &awsv2.AWSCluster{}
 	err := c.Client.Get(ctx, types.NamespacedName{
-		Name:      input.Name,
-		Namespace: input.Namespace,
+		Name:      awsInput.Name,
+		Namespace: awsInput.Namespace,
 	}, awsCluster)
 	if err != nil {
 		return nil, err
@@ -183,11 +187,15 @@ func (c *AWSProvider) GetInfraCluster(ctx context.Context, input GetAWSClusterIn
 	return awsCluster, nil
 }
 
-func (c *AWSProvider) DeleteInfraCluster(ctx context.Context, input DeleteAWSClusterInput) error {
+func (c *AWSProvider) DeleteInfraCluster(ctx context.Context, input infrastructure.DeleteInfraClusterInput) error {
+	awsInput, ok := input.(DeleteAWSClusterInput)
+	if !ok {
+		return fmt.Errorf("invalid argument to GetAWSClusterInput, input is not type '%s'", TypeCreateAWSClusterInput)
+	}
 	awsCluster := &awsv2.AWSCluster{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      input.Name,
-			Namespace: input.Namespace,
+			Name:      awsInput.Name,
+			Namespace: awsInput.Namespace,
 		},
 	}
 

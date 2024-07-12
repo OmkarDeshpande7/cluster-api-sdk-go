@@ -69,11 +69,12 @@ func (mr *MockControlPlaneProviderMockRecorder) DeleteControlPlane(ctx, input an
 }
 
 // GetControlPlane mocks base method.
-func (m *MockControlPlaneProvider) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) error {
+func (m *MockControlPlaneProvider) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) (any, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetControlPlane", ctx, input)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetControlPlane indicates an expected call of GetControlPlane.

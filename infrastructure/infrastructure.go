@@ -6,8 +6,8 @@ import (
 )
 
 type InfraProvider interface {
-	GetInfraCluster(ctx context.Context, input GetInfraClusterInput) error
-	GetInfraStaticIdentity(ctx context.Context, input GetInfraClusterStaticIdentityInput) error
+	GetInfraCluster(ctx context.Context, input GetInfraClusterInput) (any, error)
+	// GetInfraStaticIdentity(ctx context.Context, input GetInfraClusterStaticIdentityInput) error
 	GetInfraMachine(ctx context.Context, input GetInfraMachineInput) error
 	GetInfraMachineTemplate(ctx context.Context, input GetInfraMachineTemplateInput) error
 

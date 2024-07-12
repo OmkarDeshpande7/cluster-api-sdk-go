@@ -24,3 +24,11 @@ func (a *AWSProvider) CreateInfraMachine(ctx context.Context, input infrastructu
 	}
 	return nil
 }
+
+func (a *AWSProvider) DeleteInfraMachine(ctx context.Context, input infrastructure.DeleteInfraMachineInput) error {
+	return nil
+}
+
+func (a *AWSProvider) GetInfraMachine(ctx context.Context, input infrastructure.GetInfraMachineInput) error {
+	return nil
+}
