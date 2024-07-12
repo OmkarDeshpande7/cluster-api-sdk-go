@@ -203,15 +203,14 @@ func (a *AWSProvider) DeleteClusterRoleIdentity(ctx context.Context, input infra
 	})
 }
 
-func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetClusterRoleIdentityInput) error {
+func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetClusterInfraIdentityInput) error {
 	getRoleInput, ok := input.(GetAWSClusterRoleIdentityInput)
 	if !ok {
 		return fmt.Errorf("cannot convert to GetAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
 	}
-	return a.Client.Delete(ctx, &awsv2.AWSClusterRoleIdentity{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      getRoleInput.Name,
-			Namespace: getRoleInput.Namespace,
-		},
-	})
+	obj := &awsv2.AWSClusterRoleIdentity{}
+	return a.Client.Get(ctx, types.NamespacedName{
+		Namespace: getRoleInput.Namespace,
+		Name:      getRoleInput.Name,
+	}, obj)
 }
