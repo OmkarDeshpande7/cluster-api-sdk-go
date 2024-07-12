@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
+	"github.com/platform9/cluster-api-sdk-go/infrastructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"

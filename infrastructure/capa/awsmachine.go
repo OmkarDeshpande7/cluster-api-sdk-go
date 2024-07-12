@@ -5,7 +5,7 @@ import (
 
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 
-	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
+	"github.com/platform9/cluster-api-sdk-go/infrastructure"
 )
 
 type CreateAWSMachineInput struct {

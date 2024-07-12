@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 
-	"github.com/OmkarDeshpande7/cluster-api-sdk-go/infrastructure"
+	"github.com/platform9/cluster-api-sdk-go/infrastructure"
 )
 
 type CreateAWSClusterStaticIdentityInput struct {
@@ -29,7 +29,35 @@ func (c DeleteAWSClusterStaticIdentityInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterStaticIdentityInput) error {
+type CreateAWSClusterRoleIdentityInput struct {
+	Name, Namespace, ExternalID, RoleARN, InlinePolicy, SessionName string
+	DurationSeconds                                                 int32
+	AllowedNamespaces, PolicyARNs                                   []string
+	LabelSelectors                                                  metav1.LabelSelector
+	SourceIdentityRef                                               *awsv2.AWSIdentityReference
+}
+
+func (c CreateAWSClusterRoleIdentityInput) GetName() string {
+	return c.Name
+}
+
+type DeleteAWSClusterRoleIdentityInput struct {
+	Name, Namespace string
+}
+
+func (d DeleteAWSClusterRoleIdentityInput) GetName() string {
+	return d.Name
+}
+
+type GetAWSClusterRoleIdentityInput struct {
+	Name, Namespace string
+}
+
+func (d GetAWSClusterRoleIdentityInput) GetName() string {
+	return d.Name
+}
+
+func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(CreateAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateInfraStaticIdentity, input is not type '%s'", TypeCreateAWSClusterStaticIdentity)
@@ -58,7 +86,7 @@ func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infra
 	return nil
 }
 
-func (a *AWSProvider) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterStaticIdentityInput) error {
+func (a *AWSProvider) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
 	awsInput, ok := input.(DeleteAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to DeleteInfraStaticIdentity, input is not type '%s'", TypeDeleteAWSClusterStaticIdentity)
@@ -78,7 +106,7 @@ func (a *AWSProvider) DeleteInfraStaticIdentity(ctx context.Context, input infra
 	return nil
 }
 
-func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterStaticIdentityInput) error {
+func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(CreateAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateSecretForAWSSI, input is not type '%s'", TypeCreateAWSClusterStaticIdentity)
@@ -100,7 +128,7 @@ func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastruc
 	return nil
 }
 
-func (a *AWSProvider) DeleteSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterStaticIdentityInput) error {
+func (a *AWSProvider) DeleteSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(DeleteAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to DeleteSecretForAWSSI, input is not type '%s'", TypeDeleteAWSClusterStaticIdentity)
@@ -126,4 +154,63 @@ func (a *AWSProvider) DeleteSecretForAWSSI(ctx context.Context, input infrastruc
 		return err
 	}
 	return nil
+}
+
+func (a *AWSProvider) CreateClusterRoleIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+	roleInput, ok := input.(CreateAWSClusterRoleIdentityInput)
+	if !ok {
+		return fmt.Errorf("cannot convert to CreateAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
+	}
+	awsRi := awsv2.AWSClusterRoleIdentity{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      roleInput.Name,
+			Namespace: roleInput.Namespace,
+		},
+		Spec: awsv2.AWSClusterRoleIdentitySpec{
+			AWSClusterIdentitySpec: awsv2.AWSClusterIdentitySpec{
+				AllowedNamespaces: &awsv2.AllowedNamespaces{
+					NamespaceList: roleInput.AllowedNamespaces,
+					Selector:      roleInput.LabelSelectors,
+				},
+			},
+			AWSRoleSpec: awsv2.AWSRoleSpec{
+				RoleArn:         roleInput.RoleARN,
+				SessionName:     roleInput.SessionName,
+				DurationSeconds: roleInput.DurationSeconds,
+				InlinePolicy:    roleInput.InlinePolicy,
+				PolicyARNs:      roleInput.PolicyARNs,
+			},
+			ExternalID:        roleInput.ExternalID,
+			SourceIdentityRef: roleInput.SourceIdentityRef,
+		},
+	}
+	if err := a.Client.Create(ctx, &awsRi); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *AWSProvider) DeleteClusterRoleIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
+	deleteRoleInput, ok := input.(DeleteAWSClusterRoleIdentityInput)
+	if !ok {
+		return fmt.Errorf("cannot convert to DeleteAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
+	}
+	return a.Client.Delete(ctx, &awsv2.AWSClusterRoleIdentity{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      deleteRoleInput.Name,
+			Namespace: deleteRoleInput.Namespace,
+		},
+	})
+}
+
+func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) error {
+	getRoleInput, ok := input.(GetAWSClusterRoleIdentityInput)
+	if !ok {
+		return fmt.Errorf("cannot convert to GetAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
+	}
+	obj := &awsv2.AWSClusterRoleIdentity{}
+	return a.Client.Get(ctx, types.NamespacedName{
+		Namespace: getRoleInput.Namespace,
+		Name:      getRoleInput.Name,
+	}, obj)
 }
