@@ -3,6 +3,8 @@ package infrastructure
 import (
 	"context"
 	"errors"
+
+	awsv2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
 type InfraProvider interface {
@@ -22,7 +24,7 @@ type InfraProvider interface {
 	DeleteInfraMachineTemplate(ctx context.Context, input DeleteInfraMachineTemplateInput) error
 
 	CreateClusterRoleIdentity(ctx context.Context, input CreateInfraClusterIdentityInput) error
-	GetClusterRoleIdentity(ctx context.Context, input GetInfraClusterIdentityInput) error
+	GetClusterRoleIdentity(ctx context.Context, input GetInfraClusterIdentityInput) (*awsv2.AWSClusterRoleIdentity, error)
 	DeleteClusterRoleIdentity(ctx context.Context, input DeleteInfraClusterIdentityInput) error
 }
 
