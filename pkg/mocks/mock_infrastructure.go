@@ -15,6 +15,7 @@ import (
 
 	infrastructure "github.com/platform9/cluster-api-sdk-go/infrastructure"
 	gomock "go.uber.org/mock/gomock"
+	v1beta2 "sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2"
 )
 
 // MockInfraProvider is a mock of InfraProvider interface.
@@ -181,11 +182,12 @@ func (mr *MockInfraProviderMockRecorder) DeleteInfraStaticIdentity(ctx, input an
 }
 
 // GetClusterRoleIdentity mocks base method.
-func (m *MockInfraProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) error {
+func (m *MockInfraProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) (*v1beta2.AWSClusterRoleIdentity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetClusterRoleIdentity", ctx, input)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*v1beta2.AWSClusterRoleIdentity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetClusterRoleIdentity indicates an expected call of GetClusterRoleIdentity.
