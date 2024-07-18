@@ -81,7 +81,7 @@ func (c CreateAWSMachineTemplateInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infrastructure.CreateInfraMachineTemplateInput) error {
+func (a *AWSProviderImpl) CreateInfraMachineTemplate(ctx context.Context, input infrastructure.CreateInfraMachineTemplateInput) error {
 	awsInput, ok := input.(CreateAWSMachineTemplateInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateInfraMachineTemplate, input is not type '%s'", TypeCreateAWSMachineTemplateInput)
@@ -139,10 +139,10 @@ func (a *AWSProvider) CreateInfraMachineTemplate(ctx context.Context, input infr
 	return nil
 }
 
-func (a *AWSProvider) DeleteInfraMachineTemplate(ctx context.Context, input infrastructure.DeleteInfraMachineTemplateInput) error {
+func (a *AWSProviderImpl) DeleteInfraMachineTemplate(ctx context.Context, input infrastructure.DeleteInfraMachineTemplateInput) error {
 	return nil
 }
 
-func (a *AWSProvider) GetInfraMachineTemplate(ctx context.Context, input infrastructure.GetInfraMachineTemplateInput) error {
+func (a *AWSProviderImpl) GetInfraMachineTemplate(ctx context.Context, input infrastructure.GetInfraMachineTemplateInput) error {
 	return nil
 }
