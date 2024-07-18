@@ -108,7 +108,7 @@ func (c DeleteAWSClusterInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructure.CreateInfraClusterInput) error {
+func (a *AWSProviderImpl) CreateInfraCluster(ctx context.Context, input infrastructure.CreateInfraClusterInput) error {
 	awsInput, ok := input.(CreateAWSClusterInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateInfraCluster, input is not type '%s'", TypeCreateAWSClusterInput)
@@ -171,7 +171,7 @@ func (a *AWSProvider) CreateInfraCluster(ctx context.Context, input infrastructu
 	return nil
 }
 
-func (c *AWSProvider) GetInfraCluster(ctx context.Context, input infrastructure.GetInfraClusterInput) (any, error) {
+func (c *AWSProviderImpl) GetInfraCluster(ctx context.Context, input infrastructure.GetInfraClusterInput) (any, error) {
 	awsInput, ok := input.(GetAWSClusterInput)
 	if !ok {
 		return nil, fmt.Errorf("invalid argument to GetAWSClusterInput, input is not type '%s'", TypeCreateAWSClusterInput)
@@ -187,7 +187,7 @@ func (c *AWSProvider) GetInfraCluster(ctx context.Context, input infrastructure.
 	return awsCluster, nil
 }
 
-func (c *AWSProvider) DeleteInfraCluster(ctx context.Context, input infrastructure.DeleteInfraClusterInput) error {
+func (c *AWSProviderImpl) DeleteInfraCluster(ctx context.Context, input infrastructure.DeleteInfraClusterInput) error {
 	awsInput, ok := input.(DeleteAWSClusterInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to GetAWSClusterInput, input is not type '%s'", TypeCreateAWSClusterInput)

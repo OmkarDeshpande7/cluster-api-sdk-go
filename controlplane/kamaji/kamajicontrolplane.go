@@ -42,7 +42,7 @@ func (c DeleteKamajiControlPlaneInput) GetName() string {
 	return c.Name
 }
 
-func (c *KamajiProvider) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) (any, error) {
+func (c *KamajiProviderImpl) GetControlPlane(ctx context.Context, input controlplane.GetControlPlaneInput) (any, error) {
 	cpInput, ok := input.(GetKamajiControlPlaneInput)
 	if !ok {
 		return nil, fmt.Errorf("invalid argument to GetControlPlane, input is not type '%s'", TypeGetKamajiControlPlaneInput)
@@ -58,7 +58,7 @@ func (c *KamajiProvider) GetControlPlane(ctx context.Context, input controlplane
 	return controlPlane, nil
 }
 
-func (c *KamajiProvider) CreateControlPlane(ctx context.Context, input controlplane.CreateControlPlaneInput) error {
+func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input controlplane.CreateControlPlaneInput) error {
 	cpInput, ok := input.(CreateKamajiControlPlaneInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateControlPlane, input is not type '%s'", TypeCreateKamajiControlPlaneInput)
@@ -107,6 +107,6 @@ func (c *KamajiProvider) CreateControlPlane(ctx context.Context, input controlpl
 	return nil
 }
 
-func (c *KamajiProvider) DeleteControlPlane(ctx context.Context, input controlplane.DeleteControlPlaneInput) error {
+func (c *KamajiProviderImpl) DeleteControlPlane(ctx context.Context, input controlplane.DeleteControlPlaneInput) error {
 	return nil
 }

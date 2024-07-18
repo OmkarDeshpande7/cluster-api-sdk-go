@@ -16,7 +16,7 @@ func (c *CreateAWSMachineInput) GetName() string {
 	return c.Name
 }
 
-func (a *AWSProvider) CreateInfraMachine(ctx context.Context, input infrastructure.CreateInfraMachineInput) error {
+func (a *AWSProviderImpl) CreateInfraMachine(ctx context.Context, input infrastructure.CreateInfraMachineInput) error {
 	awsMachine := &awsv2.AWSMachine{}
 	err := a.Client.Create(ctx, awsMachine)
 	if err != nil {
@@ -25,10 +25,10 @@ func (a *AWSProvider) CreateInfraMachine(ctx context.Context, input infrastructu
 	return nil
 }
 
-func (a *AWSProvider) DeleteInfraMachine(ctx context.Context, input infrastructure.DeleteInfraMachineInput) error {
+func (a *AWSProviderImpl) DeleteInfraMachine(ctx context.Context, input infrastructure.DeleteInfraMachineInput) error {
 	return nil
 }
 
-func (a *AWSProvider) GetInfraMachine(ctx context.Context, input infrastructure.GetInfraMachineInput) error {
+func (a *AWSProviderImpl) GetInfraMachine(ctx context.Context, input infrastructure.GetInfraMachineInput) error {
 	return nil
 }

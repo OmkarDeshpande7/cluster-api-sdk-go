@@ -57,7 +57,7 @@ func (d GetAWSClusterRoleIdentityInput) GetName() string {
 	return d.Name
 }
 
-func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) CreateInfraStaticIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(CreateAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateInfraStaticIdentity, input is not type '%s'", TypeCreateAWSClusterStaticIdentity)
@@ -86,7 +86,7 @@ func (a *AWSProvider) CreateInfraStaticIdentity(ctx context.Context, input infra
 	return nil
 }
 
-func (a *AWSProvider) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) DeleteInfraStaticIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
 	awsInput, ok := input.(DeleteAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to DeleteInfraStaticIdentity, input is not type '%s'", TypeDeleteAWSClusterStaticIdentity)
@@ -106,7 +106,7 @@ func (a *AWSProvider) DeleteInfraStaticIdentity(ctx context.Context, input infra
 	return nil
 }
 
-func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) CreateSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(CreateAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateSecretForAWSSI, input is not type '%s'", TypeCreateAWSClusterStaticIdentity)
@@ -128,7 +128,7 @@ func (a *AWSProvider) CreateSecretForAWSSI(ctx context.Context, input infrastruc
 	return nil
 }
 
-func (a *AWSProvider) DeleteSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) DeleteSecretForAWSSI(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	awsInput, ok := input.(DeleteAWSClusterStaticIdentityInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to DeleteSecretForAWSSI, input is not type '%s'", TypeDeleteAWSClusterStaticIdentity)
@@ -156,7 +156,7 @@ func (a *AWSProvider) DeleteSecretForAWSSI(ctx context.Context, input infrastruc
 	return nil
 }
 
-func (a *AWSProvider) CreateClusterRoleIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) CreateClusterRoleIdentity(ctx context.Context, input infrastructure.CreateInfraClusterIdentityInput) error {
 	roleInput, ok := input.(CreateAWSClusterRoleIdentityInput)
 	if !ok {
 		return fmt.Errorf("cannot convert to CreateAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
@@ -190,7 +190,7 @@ func (a *AWSProvider) CreateClusterRoleIdentity(ctx context.Context, input infra
 	return nil
 }
 
-func (a *AWSProvider) DeleteClusterRoleIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
+func (a *AWSProviderImpl) DeleteClusterRoleIdentity(ctx context.Context, input infrastructure.DeleteInfraClusterIdentityInput) error {
 	deleteRoleInput, ok := input.(DeleteAWSClusterRoleIdentityInput)
 	if !ok {
 		return fmt.Errorf("cannot convert to DeleteAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
@@ -203,7 +203,7 @@ func (a *AWSProvider) DeleteClusterRoleIdentity(ctx context.Context, input infra
 	})
 }
 
-func (a *AWSProvider) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) (*awsv2.AWSClusterRoleIdentity, error) {
+func (a *AWSProviderImpl) GetClusterRoleIdentity(ctx context.Context, input infrastructure.GetInfraClusterIdentityInput) (*awsv2.AWSClusterRoleIdentity, error) {
 	getRoleInput, ok := input.(GetAWSClusterRoleIdentityInput)
 	if !ok {
 		return nil, fmt.Errorf("cannot convert to GetAWSClusterRoleIdentityInput: %w", infrastructure.ErrInvalidParameterType)
