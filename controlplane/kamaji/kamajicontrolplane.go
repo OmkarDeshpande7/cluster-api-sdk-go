@@ -70,29 +70,30 @@ func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input contr
 			Namespace: cpInput.Namespace,
 		},
 		Spec: kcpv1alpha1.KamajiControlPlaneSpec{
-			ApiServer: kcpv1alpha1.ControlPlaneComponent{
-				ExtraArgs: cpInput.APIServerExtraArgs,
-			},
-			ControllerManager: kcpv1alpha1.ControlPlaneComponent{
-				ExtraArgs: cpInput.ControllerManagerExtraArgs,
-			},
-			DataStoreName: cpInput.Datastore,
-			Addons: kcpv1alpha1.AddonsSpec{
-				AddonsSpec: *cpInput.AddonsSpec,
-				CoreDNS:    cpInput.CoreDNSAddonSpec,
-			},
-			Kubelet: kamajiv1alpha1.KubeletSpec{
-				CGroupFS: kamajiv1alpha1.CGroupDriver(cpInput.CGroupDriver),
-			},
-			Network: kcpv1alpha1.NetworkComponent{
-				ServiceType: kamajiv1alpha1.ServiceTypeClusterIP,
-				CertSANs:    cpInput.CertSANs,
-				Ingress: &kcpv1alpha1.IngressComponent{
-					ClassName:        ClassNameNginx,
-					Hostname:         cpInput.IngressHostname,
-					ExtraAnnotations: cpInput.ExtraAnnotations,
+			KamajiControlPlaneFields: kcpv1alpha1.KamajiControlPlaneFields{
+				ApiServer: kcpv1alpha1.ControlPlaneComponent{
+					ExtraArgs: cpInput.APIServerExtraArgs,
 				},
-			},
+				ControllerManager: kcpv1alpha1.ControlPlaneComponent{
+					ExtraArgs: cpInput.ControllerManagerExtraArgs,
+				},
+				DataStoreName: cpInput.Datastore,
+				Addons: kcpv1alpha1.AddonsSpec{
+					AddonsSpec: *cpInput.AddonsSpec,
+					CoreDNS:    cpInput.CoreDNSAddonSpec,
+				},
+				Kubelet: kamajiv1alpha1.KubeletSpec{
+					CGroupFS: kamajiv1alpha1.CGroupDriver(cpInput.CGroupDriver),
+				},
+				Network: kcpv1alpha1.NetworkComponent{
+					ServiceType: kamajiv1alpha1.ServiceTypeClusterIP,
+					CertSANs:    cpInput.CertSANs,
+					Ingress: &kcpv1alpha1.IngressComponent{
+						ClassName:        ClassNameNginx,
+						Hostname:         cpInput.IngressHostname,
+						ExtraAnnotations: cpInput.ExtraAnnotations,
+					},
+				}},
 			Replicas: pointer.Int32(cpInput.Replicas),
 			Version:  cpInput.K8sVersion,
 		},
