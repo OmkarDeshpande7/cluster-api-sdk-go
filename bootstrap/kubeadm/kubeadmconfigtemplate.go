@@ -36,11 +36,11 @@ func (c DeleteKubeadmConfigTemplateInput) GetName() string {
 	return c.Name
 }
 
-func (c *KubeadmProvider) GetBootstrapConfigTemplate(ctx context.Context, input bootstrap.GetBootstrapConfigTemplateInput) error {
+func (c KubeadmProviderImpl) GetBootstrapConfigTemplate(ctx context.Context, input bootstrap.GetBootstrapConfigTemplateInput) error {
 	return nil
 }
 
-func (c *KubeadmProvider) CreateBootstrapConfigTemplate(ctx context.Context, input bootstrap.CreateBootstrapConfigTemplateInput) error {
+func (c KubeadmProviderImpl) CreateBootstrapConfigTemplate(ctx context.Context, input bootstrap.CreateBootstrapConfigTemplateInput) error {
 	kctInput, ok := input.(CreateKubeadmConfigTemplateInput)
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateBootstrapConfigTemplate, input is not type '%s'", TypeCreateKubeadmConfigTemplateInput)
@@ -67,6 +67,6 @@ func (c *KubeadmProvider) CreateBootstrapConfigTemplate(ctx context.Context, inp
 	return nil
 }
 
-func (c *KubeadmProvider) DeleteBootstrapConfigTemplate(ctx context.Context, input bootstrap.DeleteBootstrapConfigTemplateInput) error {
+func (c KubeadmProviderImpl) DeleteBootstrapConfigTemplate(ctx context.Context, input bootstrap.DeleteBootstrapConfigTemplateInput) error {
 	return nil
 }
