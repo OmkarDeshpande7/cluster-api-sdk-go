@@ -1,0 +1,45 @@
+run:
+  timeout: 10m
+  allow-parallel-runners: true
+linters:
+  disable-all: true
+  enable:
+    - gosec
+    - gofmt
+    - govet
+    - errcheck
+    - errchkjson
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - durationcheck
+    - gocritic
+    - goconst
+    - gosimple
+    - staticcheck
+    - execinquery
+    - exhaustive
+    - exportloopref
+    - gocheckcompilerdirectives
+    - sqlclosecheck
+    - rowserrcheck
+    - forcetypeassert
+    - ginkgolinter
+    - mirror
+    - protogetter
+    - unconvert
+    - wastedassign
+    - unparam
+linters-settings: {}
+issues:
+  exclude-dirs:
+    - mocks
+    - vendor
+  exclude-files:
+    - "zz_generated.*\\.go"
+    - "_test\\.go"
+  exclude-rules:
+    - linters:
+        - errcheck
+      text: Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*print(f|ln)?|os\.(Un)?Setenv). is not checked

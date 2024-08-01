@@ -1,0 +1,29 @@
+name: Static Checks
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  lint-manager:
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.6
+      - name: Setup Go environment
+        uses: actions/setup-go@v5.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          go-version-file: './go.mod'
+      - name: Run golangci-lint on manager
+        uses: golangci/golangci-lint-action@v6.0.1
+        with:
+          working-directory: './...'
+
