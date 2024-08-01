@@ -8,7 +8,7 @@ on:
       - main
   workflow_dispatch:
 jobs:
-  lint-manager:
+  lint-sdk:
     permissions:
       contents: read
       checks: write
@@ -25,5 +25,5 @@ jobs:
       - name: Run golangci-lint on manager
         uses: golangci/golangci-lint-action@v6.0.1
         with:
-          working-directory: './...'
+          working-directory: './'
 
