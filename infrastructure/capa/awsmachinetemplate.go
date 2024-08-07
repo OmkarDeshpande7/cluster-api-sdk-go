@@ -45,6 +45,8 @@ type CreateAWSMachineTemplateInput struct {
 	AdditionalSecurityGroups []awsv2.AWSResourceReference
 
 	AdditionalTags awsv2.Tags
+
+	InstanceMetadataOptions *awsv2.InstanceMetadataOptions
 }
 
 // VolumeType describes the EBS volume type.
@@ -102,8 +104,9 @@ func (a *AWSProviderImpl) CreateInfraMachineTemplate(ctx context.Context, input 
 						Type: awsv2.VolumeType(awsInput.RootDisk.Type),
 						IOPS: awsInput.RootDisk.IOPS,
 					},
-					NonRootVolumes:    awsInput.NonRootDisk,
-					ImageLookupBaseOS: awsInput.ImageLookupBaseOS,
+					NonRootVolumes:          awsInput.NonRootDisk,
+					ImageLookupBaseOS:       awsInput.ImageLookupBaseOS,
+					InstanceMetadataOptions: awsInput.InstanceMetadataOptions,
 				},
 			},
 		},
