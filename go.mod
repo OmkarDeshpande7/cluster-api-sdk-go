@@ -116,3 +116,22 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
+
+replace (
+	// TODOCAPI: unpin these when resolved
+	github.com/docker/docker => github.com/docker/docker v24.0.6+incompatible
+	github.com/google/cel-go => github.com/google/cel-go v0.17.7
+	k8s.io/api => k8s.io/api v0.29.3
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.29.3
+	k8s.io/apimachinery => k8s.io/apimachinery v0.29.3
+	k8s.io/apiserver => k8s.io/apiserver v0.29.3
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.29.3
+	k8s.io/client-go => k8s.io/client-go v0.29.3
+	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.29.3 // indirect
+	k8s.io/component-base => k8s.io/component-base v0.29.3 // indirect
+	k8s.io/kube-proxy => k8s.io/kube-proxy v0.29.3
+	k8s.io/kubectl => k8s.io/kubectl v0.29.3
+	k8s.io/kubelet => k8s.io/kubelet v0.29.3
+	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.17.3
+
+)
